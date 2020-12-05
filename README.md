@@ -22,7 +22,7 @@ Package is available on [Packagist](https://packagist.org/packages/camoo/etech-k
 you can install it using [Composer](http://getcomposer.org).
 
 ```shell
-composer require camoo/etech-keys-sms
+composer require etech/sms
 ```
 Quick Examples
 --------------
