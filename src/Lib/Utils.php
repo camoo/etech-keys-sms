@@ -315,7 +315,7 @@ class Utils
     public static function phoneNumberE164Format(string $xTel)
     {
         if ($sTel = preg_replace('/[^\dxX]/', '', $xTel)) {
-            return '+' .ltrim($sTel, '0');
+            return ltrim($sTel, '0');
         }
         return null;
     }

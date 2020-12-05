@@ -127,8 +127,10 @@ final class Message extends Base
     public function validatorView(Validator $oValidator) : Validator
     {
         $oValidator
-            ->rule('required', ['id']);
+            ->rule('required', ['id', 'to']);
         $this->notEmptyRule($oValidator, 'id');
+        $this->isPossibleNumber($oValidator, 'to');
         return $oValidator;
     }
+
 }

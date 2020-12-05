@@ -98,12 +98,12 @@ class Base
      * @return void
      * @deprecated 3.1.3 Use notEmptyRule() instead.
      */
-	 // @codeCoverageIgnoreStart
+    // @codeCoverageIgnoreStart
     public function notBlankRule(&$oValidator, string $sParam) : void
     {
-		$this->notEmptyRule($oValidator, $sParam);
+        $this->notEmptyRule($oValidator, $sParam);
     }
-	 // @codeCoverageIgnoreEnd
+    // @codeCoverageIgnoreEnd
 
     public function isPossibleNumber(&$oValidator, string $sParam) : void
     {
@@ -117,7 +117,7 @@ class Base
                     $sTo = is_array($xTo) && !empty($xTo['mobile'])? $xTo['mobile'] : $xTo;
                     $xTel = preg_replace('/[^\dxX]/', '', $sTo);
                     $xTel = ltrim($xTel, '0');
-                    if (!is_numeric($xTel) || mb_strlen($xTel) <= 10 || mb_strlen($xTel) > 15) {
+                    if (!is_numeric($xTel) || mb_strlen($xTel) < 9 || mb_strlen($xTel) > 15) {
                         return false;
                     }
                 }

@@ -11,7 +11,6 @@ use Etech\Sms\Lib\Utils;
 
 /**
  * Class HttpClient
- *
  */
 class HttpClient
 {
@@ -129,21 +128,32 @@ class HttpClient
 
         if (array_key_exists('to', $data)) {
             $phoneNumber = Utils::getNumberProto($data['to'], 'CM');
-
-            $dataMapping = array_merge([
-                'sender_id'    => $data['from'],
-                'destinataire' => $phoneNumber->getNationalNumber(),
-                'message' 	   => $data['message'],
-            ], $dataMapping);
+            $dataMapping['destinataire'] = $phoneNumber->getNationalNumber();
         }
 
+
+        if (array_key_exists('id', $data)) {
+            $dataMapping['id'] = $data['id'];
+        }
+
+        if (array_key_exists('message', $data)) {
+            $dataMapping = array_merge([
+                'sender_id'     => $data['from'],
+                'message' 	    => $data['message'],
+                'programmation' => 0,
+            ], $dataMapping);
+
+            if (array_key_exists('reference', $data)) {
+                $dataMapping['ext_id'] = $data['reference'];
+            }
+        }
         try {
             $client = null === $oClient? new Client(['timeout' => $this->timeout]) : $oClient;
-			$oResponse = $client->request(
-				$sMethod,
-				$this->endpoint,
-				[$this->hRequestVerbs[$sMethod] => $dataMapping, 'headers' => $hHeaders]
-			);
+            $oResponse = $client->request(
+                $sMethod,
+                $this->endpoint,
+                [$this->hRequestVerbs[$sMethod] => $dataMapping, 'headers' => $hHeaders]
+            );
             if ($oResponse->getStatusCode() === 200) {
                 $result = ['result' => trim((string) $oResponse->getBody())];
                 return json_encode($result);

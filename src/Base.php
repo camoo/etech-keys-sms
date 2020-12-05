@@ -166,7 +166,7 @@ class Base
         $mapping = '';
         switch ($source):
             case 'sms':
-                $mapping = 'api';
+                $mapping = 'sendsms';
         break;
         case 'balance':
                 $mapping = 'api_credit';
@@ -174,6 +174,10 @@ class Base
         case 'dlr':
                 $mapping = 'api_dlr';
         break;
+        case 'view':
+                $mapping = 'api_dlr';
+        break;
+
         case 'list':
                 $mapping = 'api_transaction';
         break;
@@ -261,7 +265,10 @@ class Base
         if ($bWithData === true && empty($this->getErrors())) {
             $data = null === $sObjectValidator? $this->getData() : $this->getData($sObjectValidator);
             $oClassObj = $this->getDataObject();
-            if (is_object($oClassObj) && $oClassObj instanceof \Etech\Sms\Objects\Message && array_key_exists('message', $data) && $oClassObj->encrypt === true) {
+            if (is_object($oClassObj) &&
+                $oClassObj instanceof \Etech\Sms\Objects\Message &&
+                array_key_exists('message', $data) && $oClassObj->encrypt === true
+            ) {
                 $sPerm = !array_key_exists('pgp_public_file', $data)? null : $data['pgp_public_file'];
                 $data['message'] = $this->encryptMsg($data['message'], $sPerm);
             }

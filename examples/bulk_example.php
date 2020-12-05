@@ -6,9 +6,9 @@ require_once dirname(__DIR__) . '/vendor/autoload.php';
  *
  */
 
-$oMessage = \Camoo\Sms\Message::create('YOUR_API_KEY', 'YOUR_API_SECRET');
+$oMessage = \Etech\Sms\Message::create('YOUR_LOGIN', 'YOUR_PASSWORD');
 $oMessage->from ='YourCompany';
-$oMessage->to = ['+237612345678', '+237612345679', '+237612345610', '+33689764530', '+4917612345671'];
+$oMessage->to = ['237612345678', '237612345679', '237612345610'];
 $oMessage->message ='Hello Kmer World! Déjà vu!';
 var_dump($oMessage->sendBulk());
 
@@ -16,7 +16,7 @@ var_dump($oMessage->sendBulk());
 # TO do only if you store the messages in your own database
 $hCallback = [
     'path_to_php'  => '/usr/bin/php', // match your running php version. should be >= 7.1.0
-    'driver' => [\Camoo\Sms\Database\MySQL::class, 'getInstance'],
+    'driver' => [\Etech\Sms\Database\MySQL::class, 'getInstance'],
     'bulk_chunk' => 1,
     'db_config' => [
         [
@@ -35,18 +35,18 @@ $hCallback = [
         'sender'	 => 'from'
     ]
 ];
-$oMessage = \Camoo\Sms\Message::create('YOUR_API_KEY', 'YOUR_API_SECRET');
+
+$oMessage = \Etech\Sms\Message::create('YOUR_LOGIN', 'YOUR_PASSWORD');
 $oMessage->from ='YourCompany';
-$oMessage->to = ['+237612345678', '+237612345679', '+237612345610', '+33689764530', '+4917612345671', '...'];
+$oMessage->to = ['237612345678', '237612345679', '237612345610', '...'];
 $oMessage->message ='Hello Kmer World! Déjà vu!';
 var_dump($oMessage->sendBulk($hCallback));
 
-
 # Send personalized Bulk SMS
 #
-$oMessage = \Camoo\Sms\Message::create('YOUR_API_KEY', 'YOUR_API_SECRET');
+$oMessage = \Etech\Sms\Message::create('YOUR_LOGIN', 'YOUR_PASSWORD');
 $oMessage->from ='YourCompany';
-$oMessage->to = [['name' => 'John Doe', 'mobile' => '+237612345678'], ['name' => 'Jeanne Doe', 'mobile' => '+237612345679'], ['...']];
+$oMessage->to = [['name' => 'John Doe', 'mobile' => '237612345678'], ['name' => 'Jeanne Doe', 'mobile' => '237612345679'], ['...']];
 $oMessage->message ='Hello %NAME% Kmer World! Déjà vu!';
 var_dump($oMessage->sendBulk($hCallback));
 // Done!

@@ -33,7 +33,8 @@ class Balance extends Base
     {
         try {
             $this->setResourceName(Constants::RESOURCE_BALANCE);
-            return $this->execRequest(HttpClient::GET_REQUEST, false);
+            $response = $this->execRequest(HttpClient::GET_REQUEST, false);
+            return (object) ['balance' => (float) $response->result, 'currency' => 'XAF'];
         } catch (EtechSmsException $err) {
             throw new EtechSmsException('Balance Request can not be performed!');
         }

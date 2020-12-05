@@ -21,6 +21,7 @@ namespace Etech\Sms;
  *
  */
 use Etech\Sms\Exception\EtechSmsException;
+use Etech\Sms\Lib\Utils;
 
 class Message extends Base
 {
@@ -34,7 +35,9 @@ class Message extends Base
     public function send()
     {
         try {
-            return $this->execRequest(HttpClient::POST_REQUEST);
+            $this->setResourceName('sms');
+            $response = $this->execRequest(HttpClient::POST_REQUEST);
+            return (object) ['message_id' => $response->result];
         } catch (EtechSmsException $err) {
             throw new EtechSmsException($err->getMessage());
         }
@@ -51,16 +54,11 @@ class Message extends Base
     {
         try {
             $this->setResourceName(Constants::RESOURCE_VIEW);
-            return $this->execRequest(HttpClient::GET_REQUEST, true, Constants::RESOURCE_VIEW);
+            $response = $this->execRequest(HttpClient::GET_REQUEST, true, Constants::RESOURCE_VIEW);
+            return Utils::decodeJson($response->result);
         } catch (EtechSmsException $err) {
             throw new EtechSmsException($err->getMessage());
         }
-    }
-
-    public function getStatus() : string
-    {
-        $this->setResourceName(Constants::RESOURCE_STATUS);
-        return $this->execRequest(HttpClient::GET_REQUEST, true, Constants::RESOURCE_STATUS);
     }
 
     /**
