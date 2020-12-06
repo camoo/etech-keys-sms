@@ -16,9 +16,11 @@ namespace Etech\Sms;
 
 /**
  * Class Etech\Sms\Balance
+ *
  * Get or add balance to your account
  */
 use Etech\Sms\Exception\EtechSmsException;
+use Etech\Sms\Response\Balance as BalanceResponse;
 
 class Balance extends Base
 {
@@ -34,9 +36,9 @@ class Balance extends Base
         try {
             $this->setResourceName(Constants::RESOURCE_BALANCE);
             $response = $this->execRequest(HttpClient::GET_REQUEST, false);
-            return (object) ['balance' => (float) $response->result, 'currency' => 'XAF'];
+            return new BalanceResponse(sprintf('{"balance" : %f, "currency" : "XAF"}', (float) $response->result));
         } catch (EtechSmsException $err) {
-            throw new EtechSmsException('Balance Request can not be performed!');
+            return new BalanceResponse($err->getMessage(), $err->getCode());
         }
     }
 }

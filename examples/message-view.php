@@ -8,17 +8,30 @@ require_once dirname(__DIR__) . '/vendor/autoload.php';
 $oSMS = \Etech\Sms\Message::create('YOUR_LOGIN', 'YOUR_PASSWORD');
 $oSMS->id = '166156285966156285';
 $oSMS->to = '612345678';
-var_dump($oSMS->view());
+$response = $oSMS->view();
 
+var_dump($response);
 // Result
 /**
  *
-class stdClass#5 (3) {
-  public $id =>
-  string(25) "166156285966156285"
-  public $etat_sms =>
-  string(1) "2"
-  public $Libelle_sms =>
-  string(9) "DELIVERED"
+class Etech\Sms\Response\Message#5 (3) {
+  private $statusCode =>
+  int(200)
+  private $content =>
+  string(75) "{"id":"166156285966156285","etat_sms":"2","Libelle_sms":"DELIVERED"}"
+  protected $data =>
+  array(4) {
+    'status' =>
+    string(2) "OK"
+    'id' =>
+    string(25) "166156285966156285"
+    'etat_sms' =>
+    string(1) "2"
+    'Libelle_sms' =>
+    string(9) "DELIVERED"
+  }
 }
 */
+
+// Get Message Status
+var_dump($response->getStatus());

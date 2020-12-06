@@ -6,17 +6,31 @@ require_once dirname(__DIR__) . '/vendor/autoload.php';
  *
  */
 // Step 1: create balance instance
-$oBalance = \Etech\Sms\Message::create('YOUR_LOGIN', 'YOUR_PASSWORD');
+$oBalance = \Etech\Sms\Balance::create('YOUR_LOGIN', 'YOUR_PASSWORD');
 
 // Step2: retrieve your current balance
-var_dump($oBalance->get());
+$response = $oBalance->get();
+var_dump($response);
 
 // output:
 /*
-    stdClass Object
-        (
-            [balance] => 6000
-            [currency] => XAF
-        )
+     class Etech\Sms\Response\Balance#4 (3) {
+      private $statusCode =>
+      int(200)
+      private $content =>
+      string(42) "{"balance" : 5.000000, "currency" : "XAF"}"
+      protected $data =>
+      array(3) {
+        'status' =>
+        string(2) "OK"
+        'balance' =>
+        double(5)
+        'currency' =>
+        string(3) "XAF"
+      }
+    }
+*/
 
- */
+// Get Balance Value
+var_dump($response->getValue());
+// 5.00
