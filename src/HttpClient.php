@@ -16,10 +16,9 @@ class HttpClient
 {
     const GET_REQUEST = 'GET';
     const POST_REQUEST = 'POST';
-    /**
-     * @var string
-     */
-    protected $endpoint = null;
+
+    /** @var string $endpoint */
+    protected $endpoint;
 
     /**
      * @var array
@@ -50,7 +49,7 @@ class HttpClient
      * @param string $endpoint
      * @param int $timeout > 0
      *
-     * @throws \HttpClientException if timeout settings are invalid
+     * @throws HttpClientException if timeout settings are invalid
      */
     public function __construct(string $endpoint, array $hAuthentication, int $timeout = 0)
     {
@@ -131,7 +130,6 @@ class HttpClient
             $dataMapping['destinataire'] = $phoneNumber->getNationalNumber();
         }
 
-
         if (array_key_exists('id', $data)) {
             $dataMapping['id'] = $data['id'];
         }
@@ -140,13 +138,21 @@ class HttpClient
             $dataMapping = array_merge([
                 'sender_id'     => $data['from'],
                 'message' 	    => $data['message'],
-                'programmation' => 0,
             ], $dataMapping);
 
             if (array_key_exists('reference', $data)) {
                 $dataMapping['ext_id'] = $data['reference'];
             }
+
+            if (array_key_exists('datacoding', $data) && $data['datacoding'] === 'unicode') {
+                $dataMapping['unicode'] = 1;
+            }
+
+            if (array_key_exists('programmation', $data)) {
+                $dataMapping['programmation'] = $data['programmation'];
+            }
         }
+
         try {
             $client = null === $oClient? new Client(['timeout' => $this->timeout]) : $oClient;
             $oResponse = $client->request(

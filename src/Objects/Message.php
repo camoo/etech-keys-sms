@@ -35,14 +35,14 @@ final class Message extends Base
     *
     * @var string
     */
-    public $from = null;
+    public $from;
 
     /**
      * The content of the SMS message.
      *
      * @var string
      */
-    public $message = null;
+    public $message;
 
     /**
      * Recipient that sould receive the sms
@@ -50,28 +50,28 @@ final class Message extends Base
      *
      * @var string | Array
      */
-    public $to = null;
+    public $to;
 
     /**
-     * The datacoding used, can be text,plain,unicode or auto
+     * The datacoding used, can be plain or unicode
      *
      * @var string
      */
-    public $datacoding = null;
+    public $datacoding;
 
     /**
      * A client reference. It might be whatever you want to identify the your message.
      *
      * @var string
      */
-    public $reference = null;
+    public $reference;
 
     /**
      * The amount of seconds, that the message is valid. If a message is not delivered within this time, the message will be discarded. Should be greater than 30
      *
      * @var integer
      */
-    public $programmation = null;
+    public $programmation = 0;
 
     /**
      * Encrypt message before sending. Highly recommended if you are sending SMS for two factor authentication. Default : false
@@ -85,14 +85,14 @@ final class Message extends Base
      *
      * @var string
      */
-    public $pgp_public_file = null;
+    public $pgp_public_file;
 
     /**
      * Handle a status rapport. For more information: https://github.com/camoo/sms/wiki/Handle-a-status-rapport
      *
      * @var string
      */
-    public $notify_url = null;
+    public $notify_url;
 
     public function validatorDefault(Validator $oValidator) : Validator
     {
@@ -101,7 +101,7 @@ final class Message extends Base
         $oValidator
             ->rule('optional', ['datacoding','encrypt','reference', 'programmation', 'notify_url', 'pgp_public_file']);
         $oValidator
-            ->rule('in', 'datacoding', ['plain','text','unicode', 'auto']);
+            ->rule('in', 'datacoding', ['plain','unicode']);
         $oValidator
             ->rule('boolean', 'encrypt');
         $oValidator
@@ -132,5 +132,4 @@ final class Message extends Base
         $this->isPossibleNumber($oValidator, 'to');
         return $oValidator;
     }
-
 }
