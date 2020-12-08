@@ -71,7 +71,7 @@ final class Message extends Base
      *
      * @var integer
      */
-    public $programmation = 0;
+    public $programmation;
 
     /**
      * Handle a status rapport. For more information: https://github.com/camoo/sms/wiki/Handle-a-status-rapport
@@ -114,6 +114,14 @@ final class Message extends Base
             ->rule('required', ['id', 'to']);
         $this->notEmptyRule($oValidator, 'id');
         $this->isPossibleNumber($oValidator, 'to');
+        return $oValidator;
+    }
+
+    public function validatorDlr(Validator $oValidator) : Validator
+    {
+        $oValidator
+            ->rule('required', ['id']);
+        $this->notEmptyRule($oValidator, 'id');
         return $oValidator;
     }
 }

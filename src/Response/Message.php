@@ -3,6 +3,9 @@ declare(strict_types=1);
 
 namespace Etech\Sms\Response;
 
+use DateTime;
+use DateTimeZone;
+
 /**
  * Class Message
  * @author CamooSarl
@@ -37,5 +40,14 @@ final class Message extends Base
         }
 
         return 'unknow';
+    }
+
+    public function getStatusTime()
+    {
+        if (!array_key_exists('date_reception', $this->data)) {
+            return null;
+        }
+
+        return new DateTime($this->data['date_reception'], new DateTimeZone('Africa/Douala'));
     }
 }

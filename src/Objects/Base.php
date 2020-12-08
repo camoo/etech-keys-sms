@@ -24,7 +24,7 @@ class Base
     public function set(string $sProperty, $value, $oClass = null)
     {
         if ($oClass === null) {
-            return null;
+            return;
         }
         if (!property_exists($oClass, $sProperty)) {
             throw new EtechSmsException([$sProperty => 'is not allowed!']);

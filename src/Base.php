@@ -172,7 +172,7 @@ class Base
                 $mapping = 'api_credit';
         break;
         case 'dlr':
-                $mapping = 'api_dlr';
+                $mapping = 'dlrsms';
         break;
         case 'view':
                 $mapping = 'api_dlr';

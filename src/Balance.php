@@ -36,7 +36,7 @@ class Balance extends Base
         try {
             $this->setResourceName(Constants::RESOURCE_BALANCE);
             $response = $this->execRequest(HttpClient::GET_REQUEST, false);
-            return new BalanceResponse(sprintf('{"balance" : %f, "currency" : "XAF"}', (float) $response->result));
+            return new BalanceResponse(sprintf('{"balance" : %f, "currency" : "Units"}', (float) $response->result));
         } catch (EtechSmsException $err) {
             return new BalanceResponse($err->getMessage(), $err->getCode());
         }

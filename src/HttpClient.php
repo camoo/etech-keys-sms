@@ -121,8 +121,8 @@ class HttpClient
         $auth = $this->getAuthKeys();
 
         $dataMapping = [
-                'login' 	   => $auth['api_key'],
-                'password' 	   => $auth['api_secret'],
+                'login'    => $auth['api_key'],
+                'password' => $auth['api_secret'],
             ];
 
         if (array_key_exists('to', $data)) {

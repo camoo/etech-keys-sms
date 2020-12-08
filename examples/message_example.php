@@ -10,6 +10,10 @@ $oMessage->to = '+237612345678';
 $oMessage->reference = 'api' . time();
 $oMessage->message ='Hello Kmer World! Déjà vu!';
 
+// SEND message with all chars (unicode à 70 instead of 160)
+//$oMessage->message ='Hello Kmer World! Déjà vu! ça et la on fait la fête';
+//$oMessage->datacoding = 'unicode';
+
 $response = $oMessage->send();
 var_dump($response);
 

@@ -18,7 +18,7 @@ var_dump($response);
       private $statusCode =>
       int(200)
       private $content =>
-      string(42) "{"balance" : 5.000000, "currency" : "XAF"}"
+      string(42) "{"balance" : 5.000000, "currency" : "Units"}"
       protected $data =>
       array(3) {
         'status' =>
@@ -26,7 +26,7 @@ var_dump($response);
         'balance' =>
         double(5)
         'currency' =>
-        string(3) "XAF"
+        string(5) "Units"
       }
     }
 */

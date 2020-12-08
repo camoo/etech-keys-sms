@@ -1,7 +1,5 @@
 <?php
 declare(strict_types=1);
-namespace Etech\Sms;
-
 /**
  * CAMOO SARL: http://www.camoo.cm
  *
@@ -15,6 +13,8 @@ namespace Etech\Sms;
  * @link http://www.camoo.cm
  */
 
+namespace Etech\Sms;
+
 use Etech\Sms\Exception\EtechSmsException;
 use Etech\Sms\Lib\Utils;
 use Etech\Sms\Response\Message as MessageResponse;
@@ -26,11 +26,9 @@ class Message extends Base
 {
 
     /**
-     * Send Message
+     * Sends Message
      *
-     * @return mixed Message Response
-     *
-     * @throws Exception\EtechSmsException
+     * @return MessageResponse
      */
     public function send()
     {
@@ -46,15 +44,31 @@ class Message extends Base
     /**
      * Views a sent message with status
      *
-     * @throws Exception\EtechSmsException
+     * @deprecated 1.2 Use dlr() instead
      *
-     * @return mixed Message
+     * @return MessageResponse
      */
     public function view()
     {
         try {
             $this->setResourceName(Constants::RESOURCE_VIEW);
             $response = $this->execRequest(HttpClient::GET_REQUEST, true, Constants::RESOURCE_VIEW);
+            return new MessageResponse($response->result);
+        } catch (EtechSmsException $err) {
+            return new MessageResponse($err->getMessage(), $err->getCode());
+        }
+    }
+
+    /**
+     * Grabbs DLR of a sent message with status
+     *
+     * @return MessageResponse
+     */
+    public function dlr()
+    {
+        try {
+            $this->setResourceName(Constants::RESOURCE_STATUS);
+            $response = $this->execRequest(HttpClient::POST_REQUEST, true, Constants::RESOURCE_STATUS);
             return new MessageResponse($response->result);
         } catch (EtechSmsException $err) {
             return new MessageResponse($err->getMessage(), $err->getCode());
