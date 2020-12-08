@@ -9,9 +9,9 @@ namespace Etech\Sms;
  */
 class Constants
 {
-    const CLIENT_VERSION = '1.1';
+    const CLIENT_VERSION = '1.2';
     const CLIENT_TIMEOUT = 10; // 10 sec
-    const MIN_PHP_VERSION = 70000;
+    const MIN_PHP_VERSION = 70100;
     const DS = '/';
     const END_POINT_URL = 'https://sms.etech-keys.com';
     const END_POINT_VERSION = 'ss';

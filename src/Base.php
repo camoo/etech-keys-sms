@@ -265,13 +265,6 @@ class Base
         if ($bWithData === true && empty($this->getErrors())) {
             $data = null === $sObjectValidator? $this->getData() : $this->getData($sObjectValidator);
             $oClassObj = $this->getDataObject();
-            if (is_object($oClassObj) &&
-                $oClassObj instanceof \Etech\Sms\Objects\Message &&
-                array_key_exists('message', $data) && $oClassObj->encrypt === true
-            ) {
-                $sPerm = !array_key_exists('pgp_public_file', $data)? null : $data['pgp_public_file'];
-                $data['message'] = $this->encryptMsg($data['message'], $sPerm);
-            }
             if (is_object($oClassObj) && $oClassObj instanceof \Etech\Sms\Objects\Message && array_key_exists('to', $data)) {
                 $xTo = $data['to'];
                 $data['to'] = is_array($xTo)? implode(',', array_map(Constants::MAP_MOBILE, $xTo)) : $xTo;
@@ -280,35 +273,10 @@ class Base
         if (!empty($this->getErrors())) {
             throw new EtechSmsException(['_error' => $this->getErrors()]);
         }
-        if (array_key_exists('encrypt', $data)) {
-            unset($data['encrypt']);
-        }
         try {
             return $this->decode($oHttpClient->performRequest($sRequestType, $data));
         } catch (HttpClientException $err) {
             throw new EtechSmsException(['_error' => $err->getMessage()]);
-        }
-    }
-
-    /**
-     * Encrypt message using PGP
-     *
-     * @param string $sMessage
-     * @return string encrpted $sMessage
-     */
-    protected function encryptMsg(string $sMessage, $sPubFile=null) : string
-    {
-        $sPubFile = null !== $sPubFile? $sPubFile : dirname(__DIR__) . Constants::DS.'config'.Constants::DS.'keys' . Constants::DS . 'cert.pem';
-        if (!file_exists($sPubFile) || empty($sContent = file_get_contents($sPubFile))) {
-            return $sMessage;
-        }
-        try {
-            $oPGP = new \nicoSWD\GPG\GPG();
-            $sPubKey = new \nicoSWD\GPG\PublicKey($sContent);
-            return $oPGP->encrypt($sPubKey, $sMessage);
-        } catch (Exception $err) {
-            $this->_errors[] = $err->getMessage();
-            return $sMessage;
         }
     }
 

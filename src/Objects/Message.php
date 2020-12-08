@@ -74,20 +74,6 @@ final class Message extends Base
     public $programmation = 0;
 
     /**
-     * Encrypt message before sending. Highly recommended if you are sending SMS for two factor authentication. Default : false
-     *
-     * @var boolean
-     */
-    public $encrypt = false;
-
-    /**
-     * Public PGP file to Encrypt message before sending (Optional).
-     *
-     * @var string
-     */
-    public $pgp_public_file;
-
-    /**
      * Handle a status rapport. For more information: https://github.com/camoo/sms/wiki/Handle-a-status-rapport
      *
      * @var string
@@ -99,11 +85,9 @@ final class Message extends Base
         $oValidator
             ->rule('required', ['from', 'message', 'to']);
         $oValidator
-            ->rule('optional', ['datacoding','encrypt','reference', 'programmation', 'notify_url', 'pgp_public_file']);
+            ->rule('optional', ['datacoding','reference', 'programmation', 'notify_url']);
         $oValidator
             ->rule('in', 'datacoding', ['plain','unicode']);
-        $oValidator
-            ->rule('boolean', 'encrypt');
         $oValidator
             ->rule('lengthMax', 'reference', 32);
         $oValidator

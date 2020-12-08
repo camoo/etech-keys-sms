@@ -3,11 +3,10 @@
 	"description": "CAMOO API Packages",
 	"type": "library",
 	"require": {
-		"php": ">=7.0",
+		"php": ">=7.1",
 		"vlucas/valitron": "^1.4",
 		"guzzlehttp/guzzle": "^6.3",
 		"ext-mbstring": "*",
-		"nicoswd/php-gpg": "^1.7",
 		"giggsey/libphonenumber-for-php": "^8.10"
 	},
 	"minimum-stability": "dev",
@@ -15,7 +14,7 @@
 	"license": "MIT",
 	"prefer-stable" : true,
 	"require-dev": {
-        "phpunit/phpunit": "^8.4"
+        "phpunit/phpunit": "^7.0"
 	},
 	"authors": [
 		{
@@ -28,7 +27,6 @@
 		"SMS",
 		"BULK SMS",
 		"SMS Gateway",
-		"GPG SMS encrytion",
 		"Plugin camoo sms",
 		"API-SMS"
 	],
