@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Etech\Sms\Response;
 
+use Etech\Sms\Http\Response;
+
 use DateTime;
 use DateTimeZone;
 
@@ -10,7 +12,7 @@ use DateTimeZone;
  * Class Message
  * @author CamooSarl
  */
-final class Message extends Base
+final class Message extends Response
 {
     public function getId()
     {
@@ -48,6 +50,9 @@ final class Message extends Base
             return null;
         }
 
+        if (empty($this->data['date_reception'])) {
+            return null;
+        }
         return new DateTime($this->data['date_reception'], new DateTimeZone('Africa/Douala'));
     }
 }

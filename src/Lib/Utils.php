@@ -139,7 +139,8 @@ class Utils
             $iCount++;
             try {
                 call_user_func(\Etech\Sms\Constants::CLEAR_OBJECT);
-                $oMessage = null === $oMessage? \Etech\Sms\Message::create($hCredentials['api_key'], $hCredentials['api_secret']) : $oMessage;
+                $oMessage = null === $oMessage?
+                    \Etech\Sms\Message::create($hCredentials['api_key'], $hCredentials['api_secret']) : $oMessage;
 
                 // PERSONALZE
                 $sName = '';
@@ -174,7 +175,7 @@ class Utils
             }
             if ($iCount === $batch_loop) {
                 $batch_loop = $batch_loop + $iBatch;
-                @sleep(4);
+                usleep(4000000);
             }
         }
         return $axMsgSent;

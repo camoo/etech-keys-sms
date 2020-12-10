@@ -3,12 +3,14 @@ declare(strict_types=1);
 
 namespace Etech\Sms\Response;
 
+use Etech\Sms\Http\Response;
+
 /**
  * Class Balance
  *
  * @author CamooSarl
  */
-final class Balance extends Base
+final class Balance extends Response
 {
     public function getValue()
     {

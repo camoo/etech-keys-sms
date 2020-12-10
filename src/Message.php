@@ -18,6 +18,7 @@ namespace Etech\Sms;
 use Etech\Sms\Exception\EtechSmsException;
 use Etech\Sms\Lib\Utils;
 use Etech\Sms\Response\Message as MessageResponse;
+use Etech\Sms\Http\Client;
 
 /**
  * Class Etech\Sms\Message handles the methods and properties of sending a SMS message.
@@ -34,7 +35,7 @@ class Message extends Base
     {
         try {
             $this->setResourceName('sms');
-            $response = $this->execRequest(HttpClient::POST_REQUEST);
+            $response = $this->execRequest(Client::POST_REQUEST);
             return new MessageResponse(sprintf('{"message_id" : "%s"}', $response->result));
         } catch (EtechSmsException $err) {
             return new MessageResponse($err->getMessage(), $err->getCode());
@@ -52,7 +53,7 @@ class Message extends Base
     {
         try {
             $this->setResourceName(Constants::RESOURCE_VIEW);
-            $response = $this->execRequest(HttpClient::GET_REQUEST, true, Constants::RESOURCE_VIEW);
+            $response = $this->execRequest(Client::GET_REQUEST, true, Constants::RESOURCE_VIEW);
             return new MessageResponse($response->result);
         } catch (EtechSmsException $err) {
             return new MessageResponse($err->getMessage(), $err->getCode());
@@ -68,7 +69,7 @@ class Message extends Base
     {
         try {
             $this->setResourceName(Constants::RESOURCE_STATUS);
-            $response = $this->execRequest(HttpClient::POST_REQUEST, true, Constants::RESOURCE_STATUS);
+            $response = $this->execRequest(Client::POST_REQUEST, true, Constants::RESOURCE_STATUS);
             return new MessageResponse($response->result);
         } catch (EtechSmsException $err) {
             return new MessageResponse($err->getMessage(), $err->getCode());

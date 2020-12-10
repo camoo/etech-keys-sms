@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Etech\Sms\Response;
+namespace Etech\Sms\Http;
 
 use Etech\Sms\Lib\Utils;
 
@@ -10,7 +10,7 @@ use Etech\Sms\Lib\Utils;
  *
  * @author CamooSarl
  */
-class Base
+class Response
 {
     /** @var int $statusCode */
     private $statusCode;

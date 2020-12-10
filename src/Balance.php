@@ -21,6 +21,7 @@ namespace Etech\Sms;
  */
 use Etech\Sms\Exception\EtechSmsException;
 use Etech\Sms\Response\Balance as BalanceResponse;
+use Etech\Sms\Http\Client;
 
 class Balance extends Base
 {
@@ -35,7 +36,7 @@ class Balance extends Base
     {
         try {
             $this->setResourceName(Constants::RESOURCE_BALANCE);
-            $response = $this->execRequest(HttpClient::GET_REQUEST, false);
+            $response = $this->execRequest(Client::GET_REQUEST, false);
             return new BalanceResponse(sprintf('{"balance" : %f, "currency" : "Units"}', (float) $response->result));
         } catch (EtechSmsException $err) {
             return new BalanceResponse($err->getMessage(), $err->getCode());

@@ -1,18 +1,19 @@
 <?php
 declare(strict_types=1);
-namespace Etech\Sms;
+namespace Etech\Sms\Http;
 
 use Etech\Sms\Exception\HttpClientException;
 use GuzzleHttp\Exception\RequestException;
-use GuzzleHttp\Client;
+use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Psr7;
 use Valitron\Validator;
 use Etech\Sms\Lib\Utils;
+use Etech\Sms\Constants;
 
 /**
- * Class HttpClient
+ * Class Client
  */
-class HttpClient
+class Client
 {
     const GET_REQUEST = 'GET';
     const POST_REQUEST = 'POST';
@@ -154,7 +155,7 @@ class HttpClient
         }
 
         try {
-            $client = null === $oClient? new Client(['timeout' => $this->timeout]) : $oClient;
+            $client = null === $oClient? new GuzzleClient(['timeout' => $this->timeout]) : $oClient;
             $oResponse = $client->request(
                 $sMethod,
                 $this->endpoint,

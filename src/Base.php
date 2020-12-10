@@ -7,6 +7,7 @@ use Etech\Sms\Exception\EtechSmsException;
 use Etech\Sms\Exception\HttpClientException;
 use SimpleXMLElement;
 use Exception;
+use Etech\Sms\Http\Client;
 
 /**
  * Class Base
@@ -32,7 +33,7 @@ class Base
     protected static $_ahConfigs = [];
 
     /* @var object instance*/
-    protected static $_create = null;
+    protected static $_create;
 
     /**
     *  @var string Target version for "Classic" Camoo API
@@ -59,7 +60,11 @@ class Base
     }
 
     /**
+     * @param string|null $api_key
+     * @param string|null $api_secret
+     *
      * @return Objects
+     *
      * @throws Exception\EtechSmsException
      */
     public static function create(string $api_key = null, string $api_secret = null)
@@ -68,15 +73,19 @@ class Base
         if ((null === $api_key || null === $api_secret) && !file_exists($sConfigFile)) {
             throw new EtechSmsException(['config' => 'config/app.php is missing!']);
         }
-        if (file_exists($sConfigFile)) {
+        if (is_file($sConfigFile)) {
             static::$_ahConfigs = (require $sConfigFile);
             static::$_credentials = static::$_ahConfigs['App'];
         }
 
         if ((null !== $api_key && null !== $api_secret) || empty(static::$_ahConfigs['local_login'])) {
             static::$_ahConfigs = ['local_login' => false, 'App' => ['response_format' => Constants::RESPONSE_FORMAT]];
-            static::$_credentials = array_merge(static::$_ahConfigs['App'], array_combine(Constants::$asCredentialKeyWords, [$api_key, $api_secret]));
+            static::$_credentials = array_merge(
+                static::$_ahConfigs['App'],
+                array_combine(Constants::$asCredentialKeyWords, [$api_key, $api_secret])
+            );
         }
+
         $sClass = get_called_class();
         $asCaller = explode('\\', $sClass);
         $sCaller  = array_pop($asCaller);
@@ -85,16 +94,18 @@ class Base
             static::$_dataObject = new $sObjecClass();
         }
 
-        if (is_null(static::$_create)) {
-            if ($sClass !== __CLASS__) {
-                static::$_create = new $sClass();
-            } else {
-                static::$_create = new self;
-            }
+        if ($sClass !== __CLASS__) {
+            static::$_create = new $sClass();
+        } else {
+            static::$_create = new self;
         }
         return static::$_create;
     }
 
+    /**
+     * @deprecated 1.3 will be removed in 2.0
+     * @return void
+     */
     public static function clear() : void
     {
         static::$_create = null;
@@ -258,9 +269,9 @@ class Base
      * @return mixed
      * @author Camoo Sarl
      */
-    public function execRequest(string $sRequestType, bool $bWithData = true, string $sObjectValidator = null, $oClient=null)
+    public function execRequest(string $sRequestType, bool $bWithData = true, string $sObjectValidator = null, $oClient = null)
     {
-        $oHttpClient = $oClient === null? new HttpClient($this->getEndPointUrl(), $this->getCredentials()) : $oClient;
+        $oHttpClient = $oClient === null? new Client($this->getEndPointUrl(), $this->getCredentials()) : $oClient;
         $data = [];
         if ($bWithData === true && empty($this->getErrors())) {
             $data = null === $sObjectValidator? $this->getData() : $this->getData($sObjectValidator);
