@@ -3,17 +3,16 @@ declare(strict_types=1);
 namespace Etech\Sms\Objects;
 
 /**
- *
  * CAMOO SARL: http://www.camoo.cm
  * @copyright (c) camoo.cm
  * @license: You are not allowed to sell or distribute this software without permission
  * Copyright reserved
  * File: src/Objects/Message.php
- * updated: Dec 2017
  * Description: CAMOO SMS message Objects
  *
  * @link http://www.camoo.cm
  */
+
 use Valitron\Validator;
 use Etech\Sms\Exception\EtechSmsException;
 
@@ -73,19 +72,12 @@ final class Message extends Base
      */
     public $programmation;
 
-    /**
-     * Handle a status rapport. For more information: https://github.com/camoo/sms/wiki/Handle-a-status-rapport
-     *
-     * @var string
-     */
-    public $notify_url;
-
     public function validatorDefault(Validator $oValidator) : Validator
     {
         $oValidator
             ->rule('required', ['from', 'message', 'to']);
         $oValidator
-            ->rule('optional', ['datacoding','reference', 'programmation', 'notify_url']);
+            ->rule('optional', ['datacoding','reference', 'programmation']);
         $oValidator
             ->rule('in', 'datacoding', ['plain','unicode']);
         $oValidator
@@ -94,10 +86,6 @@ final class Message extends Base
             ->rule('integer', 'programmation');
         $oValidator
             ->rule('min', 'programmation', 30);
-        $oValidator
-            ->rule('lengthMax', 'notify_url', 200);
-        $oValidator
-            ->rule('url', 'notify_url');
         $oValidator
             ->rule(function ($field, $value, $params, $fields) {
                 return file_exists($value);
