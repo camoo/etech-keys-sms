@@ -9,7 +9,7 @@ namespace Etech\Sms;
  */
 class Constants
 {
-    const CLIENT_VERSION = '1.2';
+    const CLIENT_VERSION = '1.3';
     const CLIENT_TIMEOUT = 30; // 10 sec
     const MIN_PHP_VERSION = 70100;
     const DS = '/';

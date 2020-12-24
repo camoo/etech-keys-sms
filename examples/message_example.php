@@ -19,19 +19,25 @@ var_dump($response);
 
 // Result
 /**
-class Etech\Sms\Response\Message#5 (3) {
+ class Etech\Sms\Response\Message#5 (3) {
   private $statusCode =>
   int(200)
   private $content =>
-  string(75) "{"message_id":"166156285966156285"}"
+  string(71) "{"id":"166156285966156285","ext_id":"api1608802712","nbre_sms":1,"solde":5859}"
   protected $data =>
-  array(2) {
+  array(5) {
     'status' =>
     string(2) "OK"
-    'message_id' =>
-    string(25) "166156285966156285"
+    'id' =>
+    string(24) "166156285966156285"
+    'ext_id' =>
+    string(13) "api1608802712"
+    'nbre_sms' =>
+    int(1)
+    'solde' =>
+    int(5859)
   }
-}
+ }
  */
 
 // Get Message ID

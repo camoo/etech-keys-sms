@@ -55,4 +55,31 @@ final class Message extends Response
         }
         return new DateTime($this->data['date_reception'], new DateTimeZone('Africa/Douala'));
     }
+
+    public function getReference()
+    {
+        if (!array_key_exists('ext_id', $this->data)) {
+            return null;
+        }
+
+        return $this->data['ext_id'];
+    }
+
+    public function getSentTotal()
+    {
+        if (!array_key_exists('nbre_sms', $this->data)) {
+            return - 1;
+        }
+
+        return $this->data['nbre_sms'];
+    }
+
+    public function getRemainingBalance()
+    {
+        if (!array_key_exists('solde', $this->data)) {
+            return null;
+        }
+
+        return $this->data['solde'];
+    }
 }

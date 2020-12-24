@@ -36,7 +36,7 @@ class Message extends Base
         try {
             $this->setResourceName('sms');
             $response = $this->execRequest(Client::POST_REQUEST);
-            return new MessageResponse(sprintf('{"message_id" : "%s"}', $response->result));
+            return new MessageResponse($response->result);
         } catch (EtechSmsException $err) {
             return new MessageResponse($err->getMessage(), $err->getCode());
         }
