@@ -1,12 +1,13 @@
 <?php
+
 declare(strict_types=1);
 require_once dirname(__DIR__) . '/vendor/autoload.php';
 /**
  * @Brief read current balance
- *
  */
 // Step 1: create balance instance
-$oBalance = \Etech\Sms\Balance::create('YOUR_LOGIN', 'YOUR_PASSWORD');
+//$oBalance = \Etech\Sms\Balance::create('YOUR_LOGIN', 'YOUR_PASSWORD');
+$oBalance = \Etech\Sms\Balance::create('661562859', 'camoo@59');
 
 // Step2: retrieve your current balance
 $response = $oBalance->get();

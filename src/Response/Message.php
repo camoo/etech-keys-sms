@@ -1,15 +1,16 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Etech\Sms\Response;
 
-use Etech\Sms\Http\Response;
-
 use DateTime;
 use DateTimeZone;
+use Etech\Sms\Http\Response;
 
 /**
  * Class Message
+ *
  * @author CamooSarl
  */
 final class Message extends Response
@@ -30,8 +31,9 @@ final class Message extends Response
     public function getState()
     {
         if (array_key_exists('etat_sms', $this->data)) {
-            return (int) $this->data['etat_sms'];
+            return (int)$this->data['etat_sms'];
         }
+
         return 0;
     }
 
@@ -53,6 +55,7 @@ final class Message extends Response
         if (empty($this->data['date_reception'])) {
             return null;
         }
+
         return new DateTime($this->data['date_reception'], new DateTimeZone('Africa/Douala'));
     }
 
@@ -68,7 +71,7 @@ final class Message extends Response
     public function getSentTotal()
     {
         if (!array_key_exists('nbre_sms', $this->data)) {
-            return - 1;
+            return -1;
         }
 
         return $this->data['nbre_sms'];
