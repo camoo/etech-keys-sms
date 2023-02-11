@@ -7,8 +7,9 @@
 		"vlucas/valitron": "^1.4",
 		"ext-mbstring": "*",
 		"giggsey/libphonenumber-for-php": "^8.10",
-		"camoo/curl-http-client": "^1.0"
-	},
+		"camoo/curl-http-client": "^1.0",
+      "ext-mysqli": "*"
+    },
 	"minimum-stability": "dev",
 	"homepage": "https://camoo.cm",
 	"license": "MIT",

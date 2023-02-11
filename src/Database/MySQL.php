@@ -1,9 +1,12 @@
 <?php
 
 declare(strict_types=1);
+
 namespace Etech\Sms\Database;
 
 use Etech\Sms\Interfaces\Drivers;
+use mysqli;
+use mysqli_result;
 
 /**
  * Class MySQL
@@ -14,44 +17,44 @@ class MySQL implements Drivers
 
     private $dbh_connect = null;
 
-    private $dbh_query = null;
+    private mixed $dbh_query = null;
 
     private $dbh_error = null;
 
     private $dbh_escape = null;
 
-    private $connection = null;
+    private ?mysqli $connection = null;
 
     private static $_ahConfigs = [];
 
-    public static function getInstance(array $options = [])
+    public static function getInstance(array $options = []): self
     {
         static::$_ahConfigs = $options;
 
         return new self();
     }
 
-    public function getDB()
+    public function getDB(): ?self
     {
         [$this->dbh_connect, $this->dbh_query, $this->dbh_error, $this->dbh_escape] = $this->getMysqlHandlers();
         if ($this->connection = $this->db_connect($this->getConf())) {
             return $this;
         }
 
-        return false;
+        return null;
     }
 
-    public function escape_string($string)
+    public function escape_string(string $string): string
     {
         return call_user_func($this->dbh_escape, $this->connection, trim($string));
     }
 
-    public function close()
+    public function close(): bool
     {
         return mysqli_close($this->connection);
     }
 
-    public function query($query)
+    public function query(string $query): mysqli_result|bool
     {
         $result = call_user_func($this->dbh_query, $this->connection, $query);
 
@@ -62,7 +65,7 @@ class MySQL implements Drivers
         return $result;
     }
 
-    public function insert(string $table, array $variables = [])
+    public function insert(string $table, array $variables = []): bool
     {
         //Make sure the array isn't empty
         if (empty($variables)) {
@@ -89,14 +92,21 @@ class MySQL implements Drivers
         return true;
     }
 
-    protected function db_connect($config)
+    protected function db_connect(array $config)
     {
         if (isset($config['table_prefix'])) {
             $this->table_prefix = $config['table_prefix'];
         }
 
         try {
-            $connection = call_user_func($this->dbh_connect, $config['db_host'], $config['db_user'], $config['db_password'], $config['db_name'], $config['db_port']);
+            $connection = call_user_func(
+                $this->dbh_connect,
+                $config['db_host'],
+                $config['db_user'],
+                $config['db_password'],
+                $config['db_name'],
+                $config['db_port']
+            );
         } catch (\Exception $err) {
             echo 'Failed to connect to MySQL: ' . $err->getMessage() . "\n";
 
