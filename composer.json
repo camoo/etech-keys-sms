@@ -3,18 +3,19 @@
 	"description": "CAMOO API Packages",
 	"type": "library",
 	"require": {
-		"php": ">=7.1",
+		"php": ">=8.0",
 		"vlucas/valitron": "^1.4",
-		"guzzlehttp/guzzle": "^6.3",
 		"ext-mbstring": "*",
-		"giggsey/libphonenumber-for-php": "^8.10"
-	},
+		"giggsey/libphonenumber-for-php": "^8.10",
+		"camoo/curl-http-client": "^1.0",
+      "ext-mysqli": "*"
+    },
 	"minimum-stability": "dev",
 	"homepage": "https://camoo.cm",
 	"license": "MIT",
 	"prefer-stable" : true,
 	"require-dev": {
-        "phpunit/phpunit": "^7.0"
+        "phpunit/phpunit": "^9.0"
 	},
 	"authors": [
 		{

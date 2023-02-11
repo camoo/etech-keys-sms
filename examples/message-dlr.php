@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 require_once dirname(__DIR__) . '/vendor/autoload.php';
 /**
@@ -12,26 +13,26 @@ $response = $oSMS->dlr();
 var_dump($response);
 // Result
 /**
- class Etech\Sms\Response\Message#5 (3) {
-  private $statusCode =>
-  int(200)
-  private $content =>
-  string(114) "{"id":"166156285966156285","date_reception":"2020-12-05 12:29:28","etat_sms":"2","Libelle_sms":"DELIVERED"}"
-  protected $data =>
-  array(5) {
-    'status' =>
-    string(2) "OK"
-    'id' =>
-    string(25) "166156285966156285"
-    'date_reception' =>
-    string(19) "2020-12-05 12:29:28"
-    'etat_sms' =>
-    string(1) "2"
-    'Libelle_sms' =>
-    string(9) "DELIVERED"
-  }
-}
-*/
+ * class Etech\Sms\Response\Message#5 (3) {
+ * private $statusCode =>
+ * int(200)
+ * private $content =>
+ * string(114) "{"id":"166156285966156285","date_reception":"2020-12-05 12:29:28","etat_sms":"2","Libelle_sms":"DELIVERED"}"
+ * protected $data =>
+ * array(5) {
+ * 'status' =>
+ * string(2) "OK"
+ * 'id' =>
+ * string(25) "166156285966156285"
+ * 'date_reception' =>
+ * string(19) "2020-12-05 12:29:28"
+ * 'etat_sms' =>
+ * string(1) "2"
+ * 'Libelle_sms' =>
+ * string(9) "DELIVERED"
+ * }
+ * }
+ */
 
 // Get Message Status
 var_dump($response->getStatus());

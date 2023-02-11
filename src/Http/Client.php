@@ -1,53 +1,42 @@
 <?php
+
 declare(strict_types=1);
+
 namespace Etech\Sms\Http;
 
-use Etech\Sms\Exception\HttpClientException;
-use GuzzleHttp\Exception\RequestException;
-use GuzzleHttp\Client as GuzzleClient;
-use GuzzleHttp\Psr7;
-use Valitron\Validator;
-use Etech\Sms\Lib\Utils;
+use Camoo\Http\Curl\Domain\Client\ClientInterface;
+use Camoo\Http\Curl\Domain\Entity\Configuration;
+use Camoo\Http\Curl\Infrastructure\Client as CurlClient;
+use Camoo\Http\Curl\Infrastructure\Request;
 use Etech\Sms\Constants;
+use Etech\Sms\Exception\HttpClientException;
+use Throwable;
+use Valitron\Validator;
 
 /**
  * Class Client
  */
 class Client
 {
-    const GET_REQUEST = 'GET';
-    const POST_REQUEST = 'POST';
+    public const GET_REQUEST = 'GET';
 
-    /** @var string $endpoint */
-    protected $endpoint;
+    public const POST_REQUEST = 'POST';
 
-    /**
-     * @var array
-     */
-    protected $userAgent = [];
+    protected string $endpoint;
 
-    /**
-     * @var array
-     */
-    protected $hRequestVerbs = [self::GET_REQUEST => 'query', self::POST_REQUEST => 'form_params'];
+    protected array $userAgent = [];
 
-    /**
-     * @var int
-     */
-    private $timeout = Constants::CLIENT_TIMEOUT;
+    protected array $hRequestVerbs = [self::GET_REQUEST => 'query', self::POST_REQUEST => 'form_params'];
+
+    private int $timeout = Constants::CLIENT_TIMEOUT;
+
+    private array $hAuthentication = [];
+
+    private array $_headers = [];
+
+    private Configuration $clientConfiguration;
 
     /**
-    * @var mixed
-    */
-    private $hAuthentication = [];
-
-    /**
-     * @var array
-     */
-    private $_headers = [];
-
-    /**
-     * @param string $endpoint
      * @param int $timeout > 0
      *
      * @throws HttpClientException if timeout settings are invalid
@@ -56,61 +45,38 @@ class Client
     {
         $this->endpoint = $endpoint;
         $this->hAuthentication = $hAuthentication;
-        $this->addUserAgentString($this->getAPIInfo());
         $this->addUserAgentString(Constants::getPhpVersion());
 
         if (!is_int($timeout) || $timeout < 0) {
             throw new HttpClientException(sprintf(
                 'Connection timeout must be an int >= 0, got "%s".',
-                is_object($timeout) ? get_class($timeout) : gettype($timeout).' '.var_export($timeout, true)
+                is_object($timeout) ? get_class($timeout) : gettype($timeout) . ' ' . var_export($timeout, true)
             ));
         }
         if (!empty($timeout)) {
             $this->timeout = $timeout;
         }
+        $this->clientConfiguration = new Configuration($this->timeout);
     }
 
-    /**
-     * Validate request params
-     *
-     * @param Validator $oValidator
-     *
-     * @return boolean
-     */
-    private function validatorDefault(Validator $oValidator) : bool
-    {
-        $oValidator->rule('required', ['X-Api-Key', 'X-Api-Secret', 'response_format']);
-        $oValidator->rule('optional', ['User-Agent']);
-        $oValidator->rule('in', 'response_format', ['json', 'xml']);
-        return $oValidator->rule('in', 'request', array_keys($this->hRequestVerbs))->validate();
-    }
-
-    /**
-     * @param string $userAgent
-     */
-    public function addUserAgentString(string $userAgent) : void
+    public function addUserAgentString(string $userAgent): void
     {
         $this->userAgent[] = $userAgent;
     }
 
     /**
-     * @return strin userAgentString
-     */
-    protected function getUserAgentString() : string
-    {
-        return implode(' ', $this->userAgent);
-    }
-
-    /**
-     * @param string      $method
      * @param string|null $data
      *
-     * @return array
+     *@throws HttpClientException
      *
-     * @throws HttpClientException
+     * @return false|string
      */
-    public function performRequest(string $method, array $data = [], array $headers = [], $oClient=null)
-    {
+    public function performRequest(
+        string $method,
+        array $data = [],
+        array $headers = [],
+        ?ClientInterface $client = null
+    ) {
         $this->setHeader($headers);
         //VALIDATE HEADERS
         $hHeaders = $this->getHeaders();
@@ -122,13 +88,12 @@ class Client
         $auth = $this->getAuthKeys();
 
         $dataMapping = [
-                'login'    => $auth['api_key'],
-                'password' => $auth['api_secret'],
-            ];
+            'login' => $auth['api_key'],
+            'password' => $auth['api_secret'],
+        ];
 
         if (array_key_exists('to', $data)) {
-            $phoneNumber = Utils::getNumberProto($data['to'], 'CM');
-            $dataMapping['destinataire'] = $phoneNumber->getNationalNumber();
+            $dataMapping['destinataire'] = $data['to'];
         }
 
         if (array_key_exists('id', $data)) {
@@ -137,8 +102,8 @@ class Client
 
         if (array_key_exists('message', $data)) {
             $dataMapping = array_merge([
-                'sender_id'     => $data['from'],
-                'message' 	    => $data['message'],
+                'sender_id' => $data['from'],
+                'message' => $data['message'],
             ], $dataMapping);
 
             if (array_key_exists('reference', $data)) {
@@ -155,62 +120,58 @@ class Client
         }
 
         try {
-            $client = null === $oClient? new GuzzleClient(['timeout' => $this->timeout]) : $oClient;
-            $oResponse = $client->request(
-                $sMethod,
-                $this->endpoint,
-                [$this->hRequestVerbs[$sMethod] => $dataMapping, 'headers' => $hHeaders]
-            );
-            if ($oResponse->getStatusCode() === 200) {
-                $result = ['result' => trim((string) $oResponse->getBody())];
+            $request = new Request($this->clientConfiguration, $this->endpoint, $hHeaders, $dataMapping, $sMethod);
+            $client = $client ?? new CurlClient($this->clientConfiguration);
+
+            $response = $client->sendRequest($request);
+
+            if ($response->getStatusCode() === 200) {
+                $result = ['result' => trim((string)$response->getBody())];
+
                 return json_encode($result);
             }
             throw new HttpClientException();
-        } catch (RequestException $e) {
-            throw new HttpClientException(Psr7\str($e->getRequest()));
+        } catch (Throwable $exception) {
+            throw new HttpClientException($exception->getMessage(), $exception->getCode(), $exception->getPrevious());
         }
     }
 
-    protected function getAuthKeys() : array
+    protected function getUserAgentString(): string
+    {
+        return implode(' ', $this->userAgent);
+    }
+
+    protected function getAuthKeys(): array
     {
         return $this->hAuthentication;
     }
 
-    protected function setHeader(array $option = []) : void
+    protected function setHeader(array $option = []): void
     {
         $this->_headers += $option;
     }
 
-    protected function getHeaders() : array
+    protected function getHeaders(): array
     {
         $default = [];
         if ($hAuth = $this->getAuthKeys()) {
             $default = [
-                'X-Api-Key'    => $hAuth['api_key'],
+                'X-Api-Key' => $hAuth['api_key'],
                 'X-Api-Secret' => $hAuth['api_secret'],
-                'User-Agent'   => $this->getUserAgentString()
+                'User-Agent' => $this->getUserAgentString(),
             ];
         }
+
         return $this->_headers += $default;
     }
 
-    protected function getEndPointFormat() : string
+    /** Validate request params */
+    private function validatorDefault(Validator $oValidator): bool
     {
-        $asEndPoint = explode('.', $this->endpoint);
-        return end($asEndPoint);
-    }
+        $oValidator->rule('required', ['X-Api-Key', 'X-Api-Secret', 'response_format']);
+        $oValidator->rule('optional', ['User-Agent']);
+        $oValidator->rule('in', 'response_format', ['json', 'xml']);
 
-    protected function getAPIInfo() : string
-    {
-        $sIdentity = 'EtechSms/ApiClient/';
-        if (defined('WP_CAMOO_SMS_VERSION')) {
-            $sWPV = '';
-            global $wp_version;
-            if ($wp_version) {
-                $sWPV = $wp_version;//@codeCoverageIgnore
-            }
-            $sIdentity = 'WP'.$sWPV.'/CamooSMS' .WP_CAMOO_SMS_VERSION .Constants::DS;
-        }
-        return $sIdentity .Constants::CLIENT_VERSION;
+        return $oValidator->rule('in', 'request', array_keys($this->hRequestVerbs))->validate();
     }
 }

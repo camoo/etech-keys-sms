@@ -1,9 +1,11 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Etech\Sms\Http;
 
 use Etech\Sms\Lib\Utils;
+use stdClass;
 
 /**
  * Class Response
@@ -12,25 +14,18 @@ use Etech\Sms\Lib\Utils;
  */
 class Response
 {
-    /** @var int $statusCode */
-    private $statusCode;
-
-    /** @var string $content */
-    private $content;
+    /** @var string */
+    public const BAD_STATUS = 'KO';
 
     /** @var string */
-    const BAD_STATUS = 'KO';
+    public const GOOD_STATUS = 'OK';
 
-    /** @var string */
-    const GOOD_STATUS = 'OK';
+    protected array $data;
 
-    /** @var array $data */
-    protected $data;
+    private int $statusCode;
 
-    /**
-     * @param string $content
-     * @param int $statusCode
-     */
+    private string $content;
+
     public function __construct(string $content = '', int $statusCode = 200)
     {
         $this->statusCode = $statusCode;
@@ -38,25 +33,19 @@ class Response
         $this->data = $this->getJson($content);
     }
 
-    /**
-     * @return string
-     */
+    /** @return string */
     public function getBody()
     {
-        return (string) $this->content;
+        return (string)$this->content;
     }
 
-    /**
-     * @return int
-     */
+    /** @return int */
     public function getStatusCode()
     {
-        return (int) $this->statusCode;
+        return (int)$this->statusCode;
     }
 
-    /**
-     * @return string
-     */
+    /** @return string */
     public function getResponseStatus()
     {
         if (array_key_exists('status', $this->data)) {
@@ -66,30 +55,24 @@ class Response
         return static::BAD_STATUS;
     }
 
-    /**
-     * @return array
-     */
-    public function getJson()
+    public function getJson(): array
     {
         if ($this->getStatusCode() !== 200) {
-            $message = $this->content !== ''? $this->content : 'request failed!';
+            $message = $this->content !== '' ? $this->content : 'request failed!';
+
             return ['status' => static::BAD_STATUS, 'message' => $message];
         }
         $result = $this->decodeJson($this->content, true);
+
         return array_merge(['status' => static::GOOD_STATUS], $result);
     }
 
-    /**
-     * @param string $sJSON
-     * @param $bAsHash
-     *
-     * @return array|stdClass
-     */
-    protected function decodeJson(string $sJSON, bool $bAsHash = false)
+    protected function decodeJson(string $sJSON, bool $bAsHash = false): stdClass|array
     {
         if ($this->content === '') {
-            return $bAsHash === false? (object) [] : [];
+            return $bAsHash === false ? (object)[] : [];
         }
+
         return Utils::decodeJson($sJSON, $bAsHash);
     }
 }
