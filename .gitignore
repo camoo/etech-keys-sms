@@ -1,6 +1,8 @@
 .DS*
 vendor
+.idea
 *.swp
 .php_cs.cache
 phpunit.xml
 .phpunit.result.cache
+.php-cs-fixer.cache

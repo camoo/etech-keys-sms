@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace Etech\Sms;
 
+use Etech\Sms\Lib\Utils;
+
 /**
  * Class Constants
  */
 class Constants
 {
-    public const CLIENT_VERSION = '1.3';
+    public const CLIENT_VERSION = '1.4';
 
     public const CLIENT_TIMEOUT = 30; // 10 sec
 
@@ -25,8 +27,6 @@ class Constants
 
     public const RESOURCE_VIEW = 'view';
 
-    public const RESOURCE_LIST = 'list';
-
     public const RESOURCE_STATUS = 'dlr';
 
     public const RESOURCE_BALANCE = 'balance';
@@ -37,11 +37,11 @@ class Constants
 
     public const SMS_MAX_RECIPIENTS = 50;
 
-    public const CLEAR_OBJECT = [\Etech\Sms\Base::class, 'clear'];
+    public const CLEAR_OBJECT = [Base::class, 'clear'];
 
-    public const MAP_MOBILE = [\Etech\Sms\Lib\Utils::class, 'mapMobile'];
+    public const MAP_MOBILE = [Utils::class, 'mapMobile'];
 
-    public const MAP_E164FORMAT = [\Etech\Sms\Lib\Utils::class, 'phoneNumberE164Format'];
+    public const MAP_E164FORMAT = [Utils::class, 'phoneNumberE164Format'];
 
     public const PERSONLIZE_MSG_KEYS = ['%NAME%'];
 

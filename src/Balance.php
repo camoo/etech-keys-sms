@@ -33,9 +33,9 @@ class Balance extends Base
      *
      * @throws Exception\EtechSmsException
      *
-     * @return mixed Balance
+     * @return BalanceResponse Balance
      */
-    public function get()
+    public function get(): BalanceResponse
     {
         try {
             $this->setResourceName(Constants::RESOURCE_BALANCE);

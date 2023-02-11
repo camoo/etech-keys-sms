@@ -28,10 +28,8 @@ class Message extends Base
 {
     /**
      * Sends Message
-     *
-     * @return MessageResponse
      */
-    public function send()
+    public function send(): MessageResponse
     {
         try {
             $this->setResourceName('sms');
@@ -44,13 +42,11 @@ class Message extends Base
     }
 
     /**
-     * Views a sent message with status
+     * Views a cent message with status
      *
      * @deprecated 1.2 Use dlr() instead
-     *
-     * @return MessageResponse
      */
-    public function view()
+    public function view(): MessageResponse
     {
         try {
             $this->setResourceName(Constants::RESOURCE_VIEW);
@@ -64,10 +60,8 @@ class Message extends Base
 
     /**
      * Grabs DLR of a scent message with status
-     *
-     * @return MessageResponse
      */
-    public function dlr()
+    public function dlr(): MessageResponse
     {
         try {
             $this->setResourceName(Constants::RESOURCE_STATUS);
@@ -84,7 +78,7 @@ class Message extends Base
      *
      * @return int|bool
      */
-    public function sendBulk($hCallBack = [])
+    public function sendBulk(array $hCallBack = [])
     {
         $xResp = $this->execBulk($hCallBack);
 

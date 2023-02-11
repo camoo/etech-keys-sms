@@ -7,7 +7,6 @@ namespace Etech\Sms;
 use Etech\Sms\Exception\EtechSmsException;
 use Etech\Sms\Exception\HttpClientException;
 use Etech\Sms\Http\Client;
-use Exception;
 
 /**
  * Class Base
@@ -67,11 +66,6 @@ class Base
         return $this->_resourceName;
     }
 
-    /**
-     * @throws Exception\EtechSmsException
-     *
-     * @return Objects
-     */
     public static function create(?string $api_key = null, ?string $api_secret = null)
     {
         $sConfigFile = dirname(__DIR__) . Constants::DS . 'config' . Constants::DS . 'app.php';
@@ -94,9 +88,9 @@ class Base
         $sClass = get_called_class();
         $asCaller = explode('\\', $sClass);
         $sCaller = array_pop($asCaller);
-        $sObjecClass = Constants::APP_NAMESPACE . 'Objects\\' . $sCaller;
-        if (class_exists($sObjecClass)) {
-            static::$_dataObject = new $sObjecClass();
+        $sObjectClass = Constants::APP_NAMESPACE . 'Objects\\' . $sCaller;
+        if (class_exists($sObjectClass)) {
+            static::$_dataObject = new $sObjectClass();
         }
 
         if ($sClass !== __CLASS__) {
@@ -114,7 +108,7 @@ class Base
         static::$_create = null;
     }
 
-    /** @return object */
+    /** @return object|null */
     public function getDataObject()
     {
         return self::$_dataObject;
@@ -158,18 +152,22 @@ class Base
     /**
      * Execute request with credentials
      *
-     * @param mixed|null $oClient
+     * @param mixed|null $client
      *
      * @author Camoo Sarl
      */
-    public function execRequest(string $sRequestType, bool $bWithData = true, ?string $sObjectValidator = null, $oClient = null)
-    {
-        $oHttpClient = $oClient === null ? new Client($this->getEndPointUrl(), $this->getCredentials()) : $oClient;
+    public function execRequest(
+        string $sRequestType,
+        bool $bWithData = true,
+        ?string $sObjectValidator = null,
+        ?Client $client = null
+    ) {
+        $oHttpClient = $client === null ? new Client($this->getEndPointUrl(), $this->getCredentials()) : $client;
         $data = [];
         if ($bWithData === true && empty($this->getErrors())) {
             $data = null === $sObjectValidator ? $this->getData() : $this->getData($sObjectValidator);
             $oClassObj = $this->getDataObject();
-            if (is_object($oClassObj) && $oClassObj instanceof \Etech\Sms\Objects\Message && array_key_exists('to', $data)) {
+            if ($oClassObj instanceof \Etech\Sms\Objects\Message && array_key_exists('to', $data)) {
                 $xTo = $data['to'];
                 $data['to'] = is_array($xTo) ? implode(',', array_map(Constants::MAP_MOBILE, $xTo)) : $xTo;
             }
@@ -194,7 +192,7 @@ class Base
         return 'php';
     }
 
-    public function execBulk($hCallBack)
+    public function execBulk(array $hCallBack = [])
     {
         $oClassObj = $this->getDataObject();
         if (!$oClassObj->has('to') || empty($oClassObj->to)) {

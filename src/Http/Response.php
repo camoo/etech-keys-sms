@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Etech\Sms\Http;
 
 use Etech\Sms\Lib\Utils;
+use stdClass;
 
 /**
  * Class Response
@@ -19,14 +20,11 @@ class Response
     /** @var string */
     public const GOOD_STATUS = 'OK';
 
-    /** @var array $data */
-    protected $data;
+    protected array $data;
 
-    /** @var int $statusCode */
-    private $statusCode;
+    private int $statusCode;
 
-    /** @var string $content */
-    private $content;
+    private string $content;
 
     public function __construct(string $content = '', int $statusCode = 200)
     {
@@ -57,8 +55,7 @@ class Response
         return static::BAD_STATUS;
     }
 
-    /** @return array */
-    public function getJson()
+    public function getJson(): array
     {
         if ($this->getStatusCode() !== 200) {
             $message = $this->content !== '' ? $this->content : 'request failed!';
@@ -70,10 +67,7 @@ class Response
         return array_merge(['status' => static::GOOD_STATUS], $result);
     }
 
-    /**
-     * @return array|stdClass
-     */
-    protected function decodeJson(string $sJSON, bool $bAsHash = false)
+    protected function decodeJson(string $sJSON, bool $bAsHash = false): stdClass|array
     {
         if ($this->content === '') {
             return $bAsHash === false ? (object)[] : [];
