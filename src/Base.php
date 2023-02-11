@@ -14,45 +14,39 @@ use Etech\Sms\Http\Client;
 class Base
 {
     /*@ var string API endpoint */
-    protected $_endPoint = Constants::END_POINT_URL;
+    protected string $_endPoint = Constants::END_POINT_URL;
 
     /*@ var object ressource */
     protected static $_dataObject = null;
 
-    /** @var string The resource name as it is known at the server */
-    protected $_resourceName = null;
+    protected ?string $_resourceName = null;
 
-    /* @var mixed credentials */
-    protected static $_credentials = [];
+    protected static array $_credentials = [];
 
-    /* @var mixed configs*/
-    protected static $_ahConfigs = [];
+    protected static array $_ahConfigs = [];
 
     /* @var object instance*/
     protected static $_create;
 
     /** @var string Target version for "Classic" Camoo API */
-    protected $camooClassicApiVersion = Constants::END_POINT_VERSION;
+    protected string $camooClassicApiVersion = Constants::END_POINT_VERSION;
 
-    /* @var Array Errors */
-    private $_errors = [];
+    private array $_errors = [];
 
-    public function __get(string $property)
+    public function __get(string $property): mixed
     {
         $hPayload = Objects\Base::create()->get($this->getDataObject());
 
         return $hPayload[$property];
     }
 
-    public function __set(string $property, $value)
+    public function __set(string $property, mixed $value): void
     {
         try {
             Objects\Base::create()->set($property, $value, $this->getDataObject());
         } catch (EtechSmsException $err) {
             $this->_errors[] = $err->getMessage();
         }
-
-        return $this;
     }
 
     public function setResourceName(string $resourceName): void
@@ -60,8 +54,7 @@ class Base
         $this->_resourceName = $resourceName;
     }
 
-    /** @return string */
-    public function getResourceName()
+    public function getResourceName(): string
     {
         return $this->_resourceName;
     }
@@ -192,17 +185,17 @@ class Base
         return 'php';
     }
 
-    public function execBulk(array $hCallBack = [])
+    public function execBulk(array $hCallBack = []): ?int
     {
         $oClassObj = $this->getDataObject();
         if (!$oClassObj->has('to') || empty($oClassObj->to)) {
-            return false;
+            return null;
         }
 
         return Lib\Utils::backgroundProcess($this->getData(), $this->getCredentials(), $hCallBack);
     }
 
-    protected function getErrors()
+    protected function getErrors(): array
     {
         return $this->_errors;
     }

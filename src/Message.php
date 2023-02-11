@@ -5,8 +5,7 @@ declare(strict_types=1);
  * CAMOO SARL: http://www.camoo.cm
  *
  * @copyright (c) camoo.cm
- *
- * @license: You are not allowed to sell or distribute this software without permission
+ * @license You are not allowed to sell or distribute this software without permission
  * Copyright reserved
  * File: src/Message.php
  * Created by: Camoo Sarl (sms@camoo.sarl)
@@ -26,9 +25,7 @@ use Etech\Sms\Response\Message as MessageResponse;
  */
 class Message extends Base
 {
-    /**
-     * Sends Message
-     */
+    /** Sends Message */
     public function send(): MessageResponse
     {
         try {
@@ -58,9 +55,7 @@ class Message extends Base
         }
     }
 
-    /**
-     * Grabs DLR of a scent message with status
-     */
+    /** Grabs DLR of a scent message with status */
     public function dlr(): MessageResponse
     {
         try {

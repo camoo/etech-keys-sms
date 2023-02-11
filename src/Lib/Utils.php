@@ -127,7 +127,7 @@ class Utils
 
     public static function doBulkSms(array $hData, array $hCredentials, array $hCallBack = [], $oMessage = null): array
     {
-        $asPersonlizeMsgFind = Constants::PERSONLIZE_MSG_KEYS;
+        $asPersonlizeMsgFind = Constants::PERSONALIZE_MSG_KEYS;
         $iCount = 0;
         $axMsgSent = [];
         $batch_loop = 2;

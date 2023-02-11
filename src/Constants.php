@@ -11,8 +11,6 @@ use Etech\Sms\Lib\Utils;
  */
 class Constants
 {
-    public const CLIENT_VERSION = '1.4';
-
     public const CLIENT_TIMEOUT = 30; // 10 sec
 
     public const MIN_PHP_VERSION = 70100;
@@ -41,11 +39,9 @@ class Constants
 
     public const MAP_MOBILE = [Utils::class, 'mapMobile'];
 
-    public const MAP_E164FORMAT = [Utils::class, 'phoneNumberE164Format'];
+    public const PERSONALIZE_MSG_KEYS = ['%NAME%'];
 
-    public const PERSONLIZE_MSG_KEYS = ['%NAME%'];
-
-    public static $asCredentialKeyWords = ['api_key', 'api_secret'];
+    public static array $asCredentialKeyWords = ['api_key', 'api_secret'];
 
     public static function getPhpVersion(): string
     {
